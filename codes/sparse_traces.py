@@ -4,7 +4,7 @@ from __future__ import division
 import time
 import argparse
 import numpy as np
-import cPickle as pickle
+import pickle
 from collections import Counter
 
 

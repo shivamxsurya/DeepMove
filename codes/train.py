@@ -6,7 +6,7 @@ import torch
 from torch.autograd import Variable
 
 import numpy as np
-import cPickle as pickle
+import pickle
 from collections import deque, Counter
 
 
@@ -18,7 +18,7 @@ class RnnParameterData(object):
         self.data_path = data_path
         self.save_path = save_path
         self.data_name = data_name
-        data = pickle.load(open(self.data_path + self.data_name + '.pk', 'rb'))
+        data = pickle.load(open(self.data_path + self.data_name + '.pk', 'rb'), encoding='latin1')
         self.vid_list = data['vid_list']
         self.uid_list = data['uid_list']
         self.data_neural = data['data_neural']
@@ -301,14 +301,14 @@ def run_simple(data, run_idx, mode, lr, clip, model, optimizer, criterion, mode2
         u, i = run_queue.popleft()
         if u not in users_acc:
             users_acc[u] = [0, 0]
-        loc = data[u][i]['loc'].cuda()
-        tim = data[u][i]['tim'].cuda()
-        target = data[u][i]['target'].cuda()
-        uid = Variable(torch.LongTensor([u])).cuda()
+        loc = data[u][i]['loc'].cpu()
+        tim = data[u][i]['tim'].cpu()
+        target = data[u][i]['target'].cpu()
+        uid = Variable(torch.LongTensor([u])).cpu()
 
         if 'attn' in mode2:
-            history_loc = data[u][i]['history_loc'].cuda()
-            history_tim = data[u][i]['history_tim'].cuda()
+            history_loc = data[u][i]['history_loc'].cpu()
+            history_tim = data[u][i]['history_tim'].cpu()
 
         if mode2 in ['simple', 'simple_long']:
             scores = model(loc, tim)
@@ -339,7 +339,7 @@ def run_simple(data, run_idx, mode, lr, clip, model, optimizer, criterion, mode2
             users_acc[u][0] += len(target)
             acc = get_acc(target, scores)
             users_acc[u][1] += acc[2]
-        total_loss.append(loss.data.cpu().numpy()[0])
+        total_loss.append(loss.data.cpu().numpy())
 
     avg_loss = np.mean(total_loss, dtype=np.float64)
     if mode == 'train':

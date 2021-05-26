@@ -40,13 +40,13 @@ def run(args):
         parameters.model_mode, parameters.history_mode, parameters.uid_size))
 
     if parameters.model_mode in ['simple', 'simple_long']:
-        model = TrajPreSimple(parameters=parameters).cuda()
+        model = TrajPreSimple(parameters=parameters).cpu()
     elif parameters.model_mode == 'attn_avg_long_user':
-        model = TrajPreAttnAvgLongUser(parameters=parameters).cuda()
+        model = TrajPreAttnAvgLongUser(parameters=parameters).cpu()
     elif parameters.model_mode == 'attn_local_long':
-        model = TrajPreLocalAttnLong(parameters=parameters).cuda()
+        model = TrajPreLocalAttnLong(parameters=parameters).cpu()
     if args.pretrain == 1:
-        model.load_state_dict(torch.load("../pretrain/" + args.model_mode + "/res.m"))
+        model.load_state_dict(torch.load("../pretrain/" + args.model_mode + "/res.m", map_location = torch.device('cpu')))
 
     if 'max' in parameters.model_mode:
         parameters.history_mode = 'max'
@@ -55,7 +55,7 @@ def run(args):
     else:
         parameters.history_mode = 'whole'
 
-    criterion = nn.NLLLoss().cuda()
+    criterion = nn.NLLLoss().cpu()
     optimizer = optim.Adam(filter(lambda p: p.requires_grad, model.parameters()), lr=parameters.lr,
                            weight_decay=parameters.L2)
     scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'max', patience=parameters.lr_step,
