@@ -1,3 +1,6 @@
+*** minor updates due to version updation and path updation according to colab***
+
+
 # DeepMove
 PyTorch implementation of WWW'18  paper-DeepMove: Predicting Human Mobility with Attentional Recurrent Networks [link](https://dl.acm.org/citation.cfm?id=3178876.3186058)
 
