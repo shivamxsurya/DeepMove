@@ -46,7 +46,7 @@ def run(args):
     elif parameters.model_mode == 'attn_local_long':
         model = TrajPreLocalAttnLong(parameters=parameters).cpu()
     if args.pretrain == 1:
-        model.load_state_dict(torch.load("../pretrain/" + args.model_mode + "/res.m", map_location = torch.device('cpu')))
+        model.load_state_dict(torch.load("/content/DeepMove/pretrain/" + args.model_mode + "/res.m", map_location = torch.device('cpu')))
 
     if 'max' in parameters.model_mode:
         parameters.history_mode = 'max'
@@ -148,7 +148,7 @@ def run(args):
 
 
 def load_pretrained_model(config):
-    res = json.load(open("../pretrain/" + config.model_mode + "/res.txt"))
+    res = json.load(open("/content/DeepMove/pretrain/" + config.model_mode + "/res.txt"))
     args = Settings(config, res["args"])
     return args
 
@@ -201,8 +201,8 @@ if __name__ == '__main__':
     parser.add_argument('--history_mode', type=str, default='avg', choices=['max', 'avg', 'whole'])
     parser.add_argument('--rnn_type', type=str, default='LSTM', choices=['LSTM', 'GRU', 'RNN'])
     parser.add_argument('--attn_type', type=str, default='dot', choices=['general', 'concat', 'dot'])
-    parser.add_argument('--data_path', type=str, default='../data/')
-    parser.add_argument('--save_path', type=str, default='../results/')
+    parser.add_argument('--data_path', type=str, default='/content/DeepMove/data/')
+    parser.add_argument('--save_path', type=str, default='/content/DeepMove/results/')
     parser.add_argument('--model_mode', type=str, default='simple_long',
                         choices=['simple', 'simple_long', 'attn_avg_long_user', 'attn_local_long'])
     parser.add_argument('--pretrain', type=int, default=1)
