@@ -14,7 +14,7 @@ class RnnParameterData(object):
     def __init__(self, loc_emb_size=500, uid_emb_size=40, voc_emb_size=50, tim_emb_size=10, hidden_size=500,
                  lr=1e-3, lr_step=3, lr_decay=0.1, dropout_p=0.5, L2=1e-5, clip=5.0, optim='Adam',
                  history_mode='avg', attn_type='dot', epoch_max=30, rnn_type='LSTM', model_mode="simple",
-                 data_path='../data/', save_path='../results/', data_name='foursquare'):
+                 data_path='/content/DeepMove/data', save_path='/content/DeepMove/results/', data_name='foursquare'):
         self.data_path = data_path
         self.save_path = save_path
         self.data_name = data_name
@@ -217,7 +217,7 @@ def generate_input_long_history(data_neural, mode, candidate=None):
 
 def generate_queue(train_idx, mode, mode2):
     """return a deque. You must use it by train_queue.popleft()"""
-    user = train_idx.keys()
+    user = list(train_idx.keys())
     train_queue = deque()
     if mode == 'random':
         initial_queue = {}
@@ -328,10 +328,10 @@ def run_simple(data, run_idx, mode, lr, clip, model, optimizer, criterion, mode2
             loss.backward()
             # gradient clipping
             try:
-                torch.nn.utils.clip_grad_norm(model.parameters(), clip)
+                torch.nn.utils.clip_grad_norm_(model.parameters(), clip)
                 for p in model.parameters():
                     if p.requires_grad:
-                        p.data.add_(-lr, p.grad.data)
+                         p.data.add_(p.grad.data, alpha = -lr )
             except:
                 pass
             optimizer.step()
