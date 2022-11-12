@@ -1,4 +1,4 @@
-*** minor updates due to version updation and path updation according to colab***
+***minor updates due to version updation and path updation according to colab***
 
 
 # DeepMove
